@@ -22,7 +22,7 @@
 			const username = $("#username").val();
 			const messageType = $("#messageType").val();
 			const status = $("#status").val();
-			$('#btnReportExcel').after(`<label id="tipsReportExcel" style="margin-left: 15px;">正在导出,请稍后</button>`);
+			$('#btnReportExcel').after(`<label id="tipsReportExcel" style="margin-left: 15px;">正在导出第0页,请稍后</button>`);
 			exportSms(startDate, endDate, username, messageType, status, 0)
 		}
 		if (window.location.href.indexOf('playerList') > 0) {
@@ -35,13 +35,13 @@
 			const depositTimesEnd = $("#depositTimesEnd").val();
 			const withdrawAmountStart = $("#withdrawAmountStart").val();
 			const withdrawAmountEnd = $("#withdrawAmountEnd").val();
-			$('#btnReportExcel').after(`<label id="tipsReportExcel" style="margin-left: 15px;">正在导出,请稍后</button>`);
+			$('#btnReportExcel').after(`<label id="tipsReportExcel" style="margin-left: 15px;">正在导出第1页,请稍后</button>`);
 			exportPlayers(lastLoginOrigin, dtStart, dtEnd, depositAmountStart, depositAmountEnd, depositTimesStart, depositTimesEnd, withdrawAmountStart, withdrawAmountEnd, 1)
 		}
 	}
 	window.exportPlayers = function (lastLoginOrigin, dtStart, dtEnd, depositAmountStart, depositAmountEnd, depositTimesStart, depositTimesEnd, withdrawAmountStart, withdrawAmountEnd, page) {
 		$.ajax({
-			url: `/op/getPlayers?page=1&userKeyword=&accountNonLocked=2&withoutAgent=false&notLikeSearch=true&dtStart=${dtStart} 00:00:00&dtEnd=${dtEnd} 23:59:59&sortByBalance=0&depositTimesStart=${depositTimesStart}&depositTimesEnd=${depositTimesEnd}&depositAmountStart=${depositAmountStart}&depositAmountEnd=${depositAmountEnd}&withdrawAmountStart=${withdrawAmountStart}&withdrawAmountEnd=${withdrawAmountEnd}&lastLoginOrigin=${lastLoginOrigin}&_csrf=f77e997e-5c39-4c9d-9532-fddda4290ed2`,
+			url: `/op/getPlayers?page=${page}&userKeyword=&accountNonLocked=2&withoutAgent=false&notLikeSearch=true&dtStart=${dtStart} 00:00:00&dtEnd=${dtEnd} 23:59:59&sortByBalance=0&depositTimesStart=${depositTimesStart}&depositTimesEnd=${depositTimesEnd}&depositAmountStart=${depositAmountStart}&depositAmountEnd=${depositAmountEnd}&withdrawAmountStart=${withdrawAmountStart}&withdrawAmountEnd=${withdrawAmountEnd}&lastLoginOrigin=${lastLoginOrigin}&_csrf=f77e997e-5c39-4c9d-9532-fddda4290ed2`,
 			type: "GET",
 			data: {},
 			dataType: "json",
@@ -62,6 +62,7 @@
 							"提款次数": item.withdrawTimes
 						});
 					});
+					$('#tipsReportExcel').text(`总${totalPage}页，正在导出第${page}页,请稍后`);
 					if (page < totalPage) {
 						page = page + 1;
 						setTimeout(() => {
@@ -113,6 +114,7 @@
 							"状态": status
 						});
 					});
+					$('#tipsReportExcel').text(`总${result.data.totalPages}页，正在导出第${page}页,请稍后`);
 					if (!result.data.last) {
 						page = page + 1;
 						setTimeout(() => {
